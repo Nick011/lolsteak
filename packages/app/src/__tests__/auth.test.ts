@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
  * Tests for auth configuration logic.
  * These tests verify the authorization callback logic used in NextAuth.
  */
-describe('@guild/web auth', () => {
+describe('@guild/app auth', () => {
   // Replicate the authorized callback logic for testing
   function authorizedCallback(
     auth: { user?: { id: string } } | null,

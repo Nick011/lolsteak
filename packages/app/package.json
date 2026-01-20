@@ -1,5 +1,5 @@
 {
-  "name": "@guild/web",
+  "name": "@guild/app",
   "version": "0.1.0",
   "private": true,
   "scripts": {

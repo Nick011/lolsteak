@@ -6,7 +6,7 @@ export default defineConfig({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   plugins: [react() as any],
   test: {
-    name: '@guild/web',
+    name: '@guild/app',
     environment: 'jsdom',
     globals: true,
     include: ['**/*.{test,spec}.{ts,tsx}'],

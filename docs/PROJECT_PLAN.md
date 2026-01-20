@@ -333,20 +333,20 @@ _Production readiness_
 
 ### New Files
 
-- `apps/web/src/app/(public)/page.tsx` - Landing page
-- `apps/web/src/app/(public)/features/page.tsx` - Features page
-- `apps/web/src/app/auth/signin/page.tsx` - Sign in page
-- `apps/web/src/app/auth/signout/page.tsx` - Sign out page
-- `apps/web/src/app/(dashboard)/layout.tsx` - Dashboard layout
-- `apps/web/src/app/(dashboard)/page.tsx` - Dashboard home
-- `apps/web/src/app/(dashboard)/settings/page.tsx` - Guild settings
-- `apps/web/src/app/guild/create/page.tsx` - Create guild flow
-- `apps/web/src/app/guild/join/[code]/page.tsx` - Join guild flow
-- `apps/web/src/components/ui/*` - UI component library
+- `packages/app/src/app/(public)/page.tsx` - Landing page
+- `packages/app/src/app/(public)/features/page.tsx` - Features page
+- `packages/app/src/app/auth/signin/page.tsx` - Sign in page
+- `packages/app/src/app/auth/signout/page.tsx` - Sign out page
+- `packages/app/src/app/(dashboard)/layout.tsx` - Dashboard layout
+- `packages/app/src/app/(dashboard)/page.tsx` - Dashboard home
+- `packages/app/src/app/(dashboard)/settings/page.tsx` - Guild settings
+- `packages/app/src/app/guild/create/page.tsx` - Create guild flow
+- `packages/app/src/app/guild/join/[code]/page.tsx` - Join guild flow
+- `packages/app/src/components/ui/*` - UI component library
 
 ### Modify
 
-- `apps/web/src/app/layout.tsx` - Add global providers/layout
+- `packages/app/src/app/layout.tsx` - Add global providers/layout
 - `packages/api/src/routers/tenant.ts` - Add guild CRUD operations
 
 ### Schema Changes (if needed)
