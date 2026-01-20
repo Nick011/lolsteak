@@ -28,9 +28,11 @@ This keeps worktrees organized and prevents cluttering the project root.
 
 **Framework:** This project uses **Vitest** for testing.
 
+**Test Type:** Write **unit tests only**. Do NOT write e2e or integration tests at this time.
+
 **Rules:**
 
-- Every new feature requires corresponding tests
+- Every new feature requires corresponding unit tests
 - When refactoring, update existing tests to match the new implementation
 - Tests must cover happy paths and edge cases
 - Run the full test suite before pushing: `bun test`
