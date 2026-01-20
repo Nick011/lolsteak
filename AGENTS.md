@@ -22,6 +22,18 @@ git worktree add .git/beads-worktrees/<branch-name> -b <branch-name>
 
 This keeps worktrees organized and prevents cluttering the project root.
 
+## Runtime & Package Manager
+
+This project uses **Bun** as the runtime and package manager. Always use `bun` instead of `npm`, `yarn`, or `pnpm`.
+
+```bash
+bun install           # Install dependencies
+bun run <script>      # Run package.json scripts
+bun test              # Run tests
+bun add <package>     # Add a dependency
+bun add -d <package>  # Add a dev dependency
+```
+
 ## Testing Requirements
 
 **MANDATORY**: You MUST write and maintain tests for ALL code changes.
