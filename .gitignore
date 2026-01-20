@@ -63,3 +63,6 @@ venv/
 *.egg
 .vagrant
 **/local_settings.py
+
+*storybook.log
+storybook-static
