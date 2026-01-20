@@ -1,0 +1,4 @@
+export { tenantRouter } from './tenant'
+export { characterRouter } from './character'
+export { eventRouter } from './event'
+export { lootRouter } from './loot'

@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Build outputs
+dist/
+.next/
+out/
+build/
+
+# Lock files
+bun.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Turbo
+.turbo/
+
+# TypeScript
+*.tsbuildinfo
+
+# Drizzle
+drizzle/
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Misc
+.vercel/
+.serena/
+.beads/
+
+# Legacy Python/Django templates
+lolsteak/templates/
