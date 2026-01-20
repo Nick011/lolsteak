@@ -10,6 +10,9 @@ Multi-tenant guild management platform for gaming communities, starting with WoW
 - **Database**: PostgreSQL + Drizzle ORM
 - **Auth**: Auth.js (NextAuth v5) with Discord OAuth
 - **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Component Dev**: Storybook
+- **Testing**: Vitest
 
 ## Getting Started
 
@@ -73,9 +76,54 @@ lolsteak/
 
 - `bun run dev` - Start development server
 - `bun run build` - Build for production
+- `bun run test` - Run tests (watch mode)
+- `bun run test:run` - Run tests (single run)
 - `bun run type-check` - Run TypeScript checks
 - `bun run db:push` - Push schema to database
 - `bun run db:studio` - Open Drizzle Studio
+
+### Storybook
+
+```bash
+cd apps/web
+bun run storybook      # Start Storybook dev server
+bun run build-storybook # Build static Storybook
+```
+
+## UI Development
+
+This project uses [shadcn/ui](https://ui.shadcn.com/) for UI components.
+
+### Adding Components
+
+```bash
+cd apps/web
+bunx shadcn@latest add <component-name>
+```
+
+### Available Components
+
+button, card, dialog, dropdown-menu, input, label, avatar, separator, sheet, tabs, form
+
+### Writing Stories
+
+Create stories in `apps/web/src/components/ui/__stories__/` for visual testing and documentation.
+
+```tsx
+// button.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react'
+import { Button } from '../button'
+
+const meta: Meta<typeof Button> = {
+  title: 'UI/Button',
+  component: Button,
+}
+export default meta
+
+export const Default: StoryObj<typeof Button> = {
+  args: { children: 'Click me' },
+}
+```
 
 ## Database
 
