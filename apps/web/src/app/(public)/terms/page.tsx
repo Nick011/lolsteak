@@ -13,7 +13,9 @@ export default function TermsPage() {
       <Header />
       <main className="flex-1 pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-3xl">
-          <h1 className="text-4xl font-bold text-white mb-8">Terms of Service</h1>
+          <h1 className="text-4xl font-bold text-white mb-8">
+            Terms of Service
+          </h1>
           <div className="prose prose-invert prose-slate max-w-none">
             <p className="text-slate-400 mb-6">
               Last updated: {new Date().toLocaleDateString()}

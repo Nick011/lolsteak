@@ -69,8 +69,7 @@ const featureCategories = [
       },
       {
         title: 'Character Mapping',
-        description:
-          'Automatically map loot to characters in your roster.',
+        description: 'Automatically map loot to characters in your roster.',
       },
       {
         title: 'Wishlist Integration',
@@ -79,8 +78,7 @@ const featureCategories = [
       },
       {
         title: 'Reports & Analytics',
-        description:
-          'See loot distribution stats to ensure fair distribution.',
+        description: 'See loot distribution stats to ensure fair distribution.',
       },
     ],
   },
@@ -111,13 +109,11 @@ const featureCategories = [
       },
       {
         title: 'Invite Links',
-        description:
-          'Generate shareable links to easily invite new members.',
+        description: 'Generate shareable links to easily invite new members.',
       },
       {
         title: 'Battle.net Verification',
-        description:
-          'Verify character ownership through Battle.net OAuth.',
+        description: 'Verify character ownership through Battle.net OAuth.',
       },
     ],
   },
@@ -128,8 +124,7 @@ const featureCategories = [
     features: [
       {
         title: 'Slash Commands',
-        description:
-          'Use /signup, /roster, /loot and more right from Discord.',
+        description: 'Use /signup, /roster, /loot and more right from Discord.',
       },
       {
         title: 'Event Notifications',
@@ -138,13 +133,11 @@ const featureCategories = [
       },
       {
         title: 'Role Sync',
-        description:
-          'Sync guild roles with Discord roles automatically.',
+        description: 'Sync guild roles with Discord roles automatically.',
       },
       {
         title: 'Interactive Signups',
-        description:
-          'Sign up for events using Discord reactions or threads.',
+        description: 'Sign up for events using Discord reactions or threads.',
       },
       {
         title: 'Member Sync',
@@ -153,20 +146,17 @@ const featureCategories = [
       },
       {
         title: 'Channel Management',
-        description:
-          'Create and manage channels for events and announcements.',
+        description: 'Create and manage channels for events and announcements.',
       },
     ],
   },
   {
     title: 'Communication',
-    description:
-      'Keep your guild informed with built-in communication tools.',
+    description: 'Keep your guild informed with built-in communication tools.',
     features: [
       {
         title: 'Announcements',
-        description:
-          'Post important updates that all members will see.',
+        description: 'Post important updates that all members will see.',
       },
       {
         title: 'Forums',
@@ -180,8 +170,7 @@ const featureCategories = [
       },
       {
         title: 'Rich Text Editor',
-        description:
-          'Format your posts with markdown, images, and embeds.',
+        description: 'Format your posts with markdown, images, and embeds.',
       },
       {
         title: 'Search',
@@ -197,33 +186,27 @@ const featureCategories = [
   },
   {
     title: 'Integrations',
-    description:
-      'Connect with the tools your guild already uses.',
+    description: 'Connect with the tools your guild already uses.',
     features: [
       {
         title: 'Warcraft Logs',
-        description:
-          'Pull raid performance data and link logs to events.',
+        description: 'Pull raid performance data and link logs to events.',
       },
       {
         title: 'Battle.net',
-        description:
-          'Verify characters and pull current character data.',
+        description: 'Verify characters and pull current character data.',
       },
       {
         title: 'Gargul Addon',
-        description:
-          'Import loot data from the popular WoW addon.',
+        description: 'Import loot data from the popular WoW addon.',
       },
       {
         title: 'Softres.it',
-        description:
-          'Integrate with Softres.it for soft reserve management.',
+        description: 'Integrate with Softres.it for soft reserve management.',
       },
       {
         title: 'Discord',
-        description:
-          'Full Discord bot with commands, notifications, and sync.',
+        description: 'Full Discord bot with commands, notifications, and sync.',
       },
       {
         title: 'Webhooks',
@@ -267,7 +250,7 @@ export default function FeaturesPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {category.features.map((feature) => (
+                {category.features.map(feature => (
                   <div
                     key={feature.title}
                     className="bg-slate-800/30 rounded-lg p-6 border border-slate-700/50"

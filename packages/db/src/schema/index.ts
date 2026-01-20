@@ -4,6 +4,7 @@ export * from './auth'
 
 // Tenant tables
 export * from './tenants'
+export * from './roles'
 
 // Game-specific tables
 export * from './characters'

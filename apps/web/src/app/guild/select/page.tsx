@@ -30,9 +30,7 @@ export default function SelectGuildPage() {
               Guild<span className="text-purple-400">Platform</span>
             </span>
           </Link>
-          <h1 className="text-3xl font-bold text-white mb-4">
-            No Guilds Yet
-          </h1>
+          <h1 className="text-3xl font-bold text-white mb-4">No Guilds Yet</h1>
           <p className="text-slate-400 mb-8">
             Create a guild or join one with an invite code.
           </p>
@@ -56,14 +54,12 @@ export default function SelectGuildPage() {
               Guild<span className="text-purple-400">Platform</span>
             </span>
           </Link>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Select a Guild
-          </h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Select a Guild</h1>
           <p className="text-slate-400">Choose which guild to manage</p>
         </div>
 
         <div className="space-y-3">
-          {guilds.map((guild) => (
+          {guilds.map(guild => (
             <button
               key={guild.id}
               onClick={() => router.push(`/dashboard?guild=${guild.slug}`)}

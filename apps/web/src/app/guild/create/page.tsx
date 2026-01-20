@@ -27,10 +27,10 @@ export default function CreateGuildPage() {
   const [error, setError] = useState('')
 
   const createMutation = trpc.tenant.create.useMutation({
-    onSuccess: (tenant) => {
+    onSuccess: tenant => {
       router.push(`/dashboard?guild=${tenant.slug}`)
     },
-    onError: (err) => {
+    onError: err => {
       setError(err.message)
     },
   })
@@ -94,7 +94,7 @@ export default function CreateGuildPage() {
                 type="text"
                 id="name"
                 value={name}
-                onChange={(e) => handleNameChange(e.target.value)}
+                onChange={e => handleNameChange(e.target.value)}
                 className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="My Awesome Guild"
                 required
@@ -118,7 +118,7 @@ export default function CreateGuildPage() {
                   type="text"
                   id="slug"
                   value={slug}
-                  onChange={(e) => setSlug(e.target.value.toLowerCase())}
+                  onChange={e => setSlug(e.target.value.toLowerCase())}
                   className="flex-1 px-4 py-3 bg-slate-900 border border-slate-700 rounded-r-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="my-guild"
                   required
@@ -142,10 +142,10 @@ export default function CreateGuildPage() {
               <select
                 id="gameType"
                 value={gameType}
-                onChange={(e) => setGameType(e.target.value)}
+                onChange={e => setGameType(e.target.value)}
                 className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               >
-                {gameTypes.map((type) => (
+                {gameTypes.map(type => (
                   <option key={type.value} value={type.value}>
                     {type.label}
                   </option>
@@ -163,7 +163,7 @@ export default function CreateGuildPage() {
               <textarea
                 id="description"
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={e => setDescription(e.target.value)}
                 rows={3}
                 className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
                 placeholder="Tell us about your guild..."

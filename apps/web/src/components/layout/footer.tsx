@@ -64,7 +64,10 @@ export function Footer() {
         </div>
 
         <div className="border-t border-slate-800 mt-12 pt-8 text-center text-slate-500">
-          <p>&copy; {new Date().getFullYear()} GuildPlatform. All rights reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()} GuildPlatform. All rights
+            reserved.
+          </p>
         </div>
       </div>
     </footer>

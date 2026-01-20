@@ -16,8 +16,8 @@ export default async function DashboardPage() {
           Welcome back, {session.user?.name ?? 'Guild Leader'}!
         </p>
         <p className="text-slate-400 mt-2">
-          Your guild dashboard is coming soon. Stay tuned for roster
-          management, event scheduling, and loot tracking.
+          Your guild dashboard is coming soon. Stay tuned for roster management,
+          event scheduling, and loot tracking.
         </p>
       </div>
     </div>

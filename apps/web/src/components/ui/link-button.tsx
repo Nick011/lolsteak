@@ -12,8 +12,7 @@ interface LinkButtonProps extends ComponentProps<typeof Link> {
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
     'bg-purple-600 text-white hover:bg-purple-500 focus:ring-purple-500 shadow-lg shadow-purple-500/25',
-  secondary:
-    'bg-slate-700 text-white hover:bg-slate-600 focus:ring-slate-500',
+  secondary: 'bg-slate-700 text-white hover:bg-slate-600 focus:ring-slate-500',
   outline:
     'border-2 border-purple-500 text-purple-400 hover:bg-purple-500/10 focus:ring-purple-500',
   ghost:

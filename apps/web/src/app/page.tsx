@@ -107,7 +107,7 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((feature) => (
+              {features.map(feature => (
                 <div
                   key={feature.title}
                   className="bg-slate-800/50 rounded-xl p-6 border border-slate-700 hover:border-purple-500/50 transition-colors"
@@ -158,7 +158,7 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              {steps.map((step) => (
+              {steps.map(step => (
                 <div key={step.number} className="text-center">
                   <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
                     {step.number}

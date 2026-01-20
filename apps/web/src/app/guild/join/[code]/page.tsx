@@ -18,10 +18,10 @@ export default function JoinGuildWithCodePage() {
   )
 
   const joinMutation = trpc.tenant.join.useMutation({
-    onSuccess: (tenant) => {
+    onSuccess: tenant => {
       router.push(`/dashboard?guild=${tenant.slug}`)
     },
-    onError: (err) => {
+    onError: err => {
       setError(err.message)
     },
   })
@@ -127,10 +127,7 @@ export default function JoinGuildWithCodePage() {
           </Button>
 
           <div className="mt-4 text-center">
-            <Link
-              href="/"
-              className="text-slate-400 hover:text-white text-sm"
-            >
+            <Link href="/" className="text-slate-400 hover:text-white text-sm">
               No thanks
             </Link>
           </div>

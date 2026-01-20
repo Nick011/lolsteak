@@ -126,7 +126,13 @@ export const tenantRouter = router({
             timezone: z.string().optional(),
             defaultRaidSize: z.number().min(1).max(100).optional(),
             lootSystem: z
-              .enum(['dkp', 'loot_council', 'soft_reserve', 'gdkp', 'need_greed'])
+              .enum([
+                'dkp',
+                'loot_council',
+                'soft_reserve',
+                'gdkp',
+                'need_greed',
+              ])
               .optional(),
           })
           .optional(),
@@ -152,7 +158,9 @@ export const tenantRouter = router({
         .update(tenants)
         .set({
           ...(input.name && { name: input.name }),
-          ...(input.description !== undefined && { description: input.description }),
+          ...(input.description !== undefined && {
+            description: input.description,
+          }),
           ...(input.logoUrl !== undefined && { logoUrl: input.logoUrl }),
           ...(input.bannerUrl !== undefined && { bannerUrl: input.bannerUrl }),
           ...(input.settings && {

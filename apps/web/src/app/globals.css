@@ -2,81 +2,450 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   SOFT GLOW DESIGN SYSTEM
+   A dreamy, gradient mesh aesthetic with
+   glassmorphism and flowing pastel accents
+   ============================================ */
+
+/* Import Satoshi and Clash Display from Fontshare */
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&f[]=clash-display@400,500,600,700&display=swap');
+
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 15, 23, 42;
-  --background-end-rgb: 30, 41, 59;
+  /* Typography */
+  --font-display: 'Clash Display', system-ui, sans-serif;
+  --font-body: 'Satoshi', system-ui, sans-serif;
+
+  /* Soft Glow Color Palette */
+  --glow-void: 15 10 31; /* #0f0a1f - deepest background */
+  --glow-abyss: 26 16 48; /* #1a1030 - card backgrounds */
+  --glow-surface: 38 28 66; /* #261c42 - elevated surfaces */
+  --glow-border: 58 45 90; /* #3a2d5a - subtle borders */
+
+  /* Pastel Accent Spectrum */
+  --glow-peach: 255 183 150; /* #ffb796 - warm accent */
+  --glow-lavender: 199 166 255; /* #c7a6ff - primary accent */
+  --glow-mint: 150 255 212; /* #96ffd4 - cool accent */
+  --glow-blush: 255 150 200; /* #ff96c8 - highlight */
+  --glow-sky: 150 200 255; /* #96c8ff - info accent */
+
+  /* Text Colors */
+  --glow-text-primary: 255 255 255;
+  --glow-text-secondary: 180 170 200;
+  --glow-text-muted: 120 110 145;
+
+  /* Gradient Mesh Colors (for animated background) */
+  --mesh-1: rgba(199, 166, 255, 0.4); /* lavender */
+  --mesh-2: rgba(255, 183, 150, 0.35); /* peach */
+  --mesh-3: rgba(150, 255, 212, 0.3); /* mint */
+  --mesh-4: rgba(255, 150, 200, 0.25); /* blush */
+
+  /* Glass Effect Variables */
+  --glass-blur: 16px;
+  --glass-opacity: 0.08;
+  --glass-border-opacity: 0.15;
+  --glass-glow-opacity: 0.5;
+
+  /* Animation Timing */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Spacing Scale */
+  --radius: 1rem;
+  --radius-sm: 0.75rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-full: 9999px;
 }
-
-body {
-  min-height: 100vh;
-}
-
-
 
 @layer base {
+  /* Map to shadcn/ui expected variables */
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
+    --background: 260 35% 8%;
+    --foreground: 0 0% 100%;
+    --card: 260 40% 12%;
+    --card-foreground: 0 0% 100%;
+    --popover: 260 40% 10%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 267 100% 83%;
+    --primary-foreground: 260 35% 8%;
+    --secondary: 260 30% 20%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 260 25% 18%;
+    --muted-foreground: 260 15% 65%;
+    --accent: 155 100% 79%;
+    --accent-foreground: 260 35% 8%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 260 30% 22%;
+    --input: 260 30% 18%;
+    --ring: 267 100% 83%;
+    --chart-1: 267 100% 83%;
+    --chart-2: 155 100% 79%;
+    --chart-3: 20 100% 79%;
+    --chart-4: 330 100% 79%;
+    --chart-5: 210 100% 79%;
   }
+
+  /* Force dark mode always for Soft Glow */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --background: 260 35% 8%;
+    --foreground: 0 0% 100%;
+    --card: 260 40% 12%;
+    --card-foreground: 0 0% 100%;
+    --popover: 260 40% 10%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 267 100% 83%;
+    --primary-foreground: 260 35% 8%;
+    --secondary: 260 30% 20%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 260 25% 18%;
+    --muted-foreground: 260 15% 65%;
+    --accent: 155 100% 79%;
+    --accent-foreground: 260 35% 8%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 260 30% 22%;
+    --input: 260 30% 18%;
+    --ring: 267 100% 83%;
   }
 }
-
-
 
 @layer base {
   * {
     @apply border-border;
   }
+
+  html {
+    font-family: var(--font-body);
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    background: rgb(var(--glow-void));
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+}
+
+@layer components {
+  /* ============================================
+     GLASSMORPHISM UTILITIES
+     ============================================ */
+
+  .glass {
+    background: rgba(var(--glow-abyss), var(--glass-opacity));
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid rgba(var(--glow-lavender), var(--glass-border-opacity));
+  }
+
+  .glass-elevated {
+    background: rgba(var(--glow-surface), 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(var(--glow-lavender), 0.2);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .glass-card {
+    background: linear-gradient(
+      135deg,
+      rgba(var(--glow-abyss), 0.8) 0%,
+      rgba(var(--glow-surface), 0.4) 100%
+    );
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid rgba(var(--glow-lavender), var(--glass-border-opacity));
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(var(--glow-lavender), 0.05);
+  }
+
+  /* ============================================
+     GLOW EFFECTS
+     ============================================ */
+
+  .glow-lavender {
+    box-shadow:
+      0 0 20px rgba(var(--glow-lavender), 0.3),
+      0 0 40px rgba(var(--glow-lavender), 0.1);
+  }
+
+  .glow-mint {
+    box-shadow:
+      0 0 20px rgba(var(--glow-mint), 0.3),
+      0 0 40px rgba(var(--glow-mint), 0.1);
+  }
+
+  .glow-peach {
+    box-shadow:
+      0 0 20px rgba(var(--glow-peach), 0.3),
+      0 0 40px rgba(var(--glow-peach), 0.1);
+  }
+
+  .glow-blush {
+    box-shadow:
+      0 0 20px rgba(var(--glow-blush), 0.3),
+      0 0 40px rgba(var(--glow-blush), 0.1);
+  }
+
+  /* Interactive glow on hover */
+  .glow-interactive {
+    transition: box-shadow 0.4s var(--ease-out-expo);
+  }
+
+  .glow-interactive:hover {
+    box-shadow:
+      0 0 30px rgba(var(--glow-lavender), 0.4),
+      0 0 60px rgba(var(--glow-lavender), 0.15),
+      0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  /* ============================================
+     GRADIENT TEXT
+     ============================================ */
+
+  .text-gradient-glow {
+    background: linear-gradient(
+      135deg,
+      rgb(var(--glow-peach)) 0%,
+      rgb(var(--glow-lavender)) 50%,
+      rgb(var(--glow-mint)) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-lavender {
+    background: linear-gradient(
+      135deg,
+      rgb(var(--glow-lavender)) 0%,
+      rgb(var(--glow-blush)) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ============================================
+     ANIMATED GRADIENT BORDER
+     ============================================ */
+
+  .gradient-border {
+    position: relative;
+    background: rgba(var(--glow-abyss), 0.9);
+    border-radius: var(--radius-lg);
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(var(--glow-peach), 0.5),
+      rgba(var(--glow-lavender), 0.5),
+      rgba(var(--glow-mint), 0.5)
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Animated version */
+  .gradient-border-animated::before {
+    background: linear-gradient(
+      var(--gradient-angle, 135deg),
+      rgba(var(--glow-peach), 0.6),
+      rgba(var(--glow-lavender), 0.6),
+      rgba(var(--glow-mint), 0.6),
+      rgba(var(--glow-blush), 0.6),
+      rgba(var(--glow-peach), 0.6)
+    );
+    animation: gradient-rotate 8s linear infinite;
+  }
+
+  @keyframes gradient-rotate {
+    0% {
+      --gradient-angle: 0deg;
+    }
+    100% {
+      --gradient-angle: 360deg;
+    }
+  }
+
+  @property --gradient-angle {
+    syntax: '<angle>';
+    initial-value: 135deg;
+    inherits: false;
+  }
+
+  /* ============================================
+     BLOB / ORGANIC SHAPES
+     ============================================ */
+
+  .blob {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    animation: blob-morph 8s ease-in-out infinite;
+  }
+
+  @keyframes blob-morph {
+    0%,
+    100% {
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+    25% {
+      border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    }
+    50% {
+      border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+    }
+    75% {
+      border-radius: 60% 30% 60% 40% / 70% 40% 50% 60%;
+    }
+  }
+
+  /* ============================================
+     FLOATING ANIMATION
+     ============================================ */
+
+  .float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .float-delayed {
+    animation: float 6s ease-in-out infinite;
+    animation-delay: -3s;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-20px) rotate(2deg);
+    }
+  }
+
+  /* ============================================
+     BREATHING / PULSING GLOW
+     ============================================ */
+
+  .breathe {
+    animation: breathe 4s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%,
+    100% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+  }
+
+  /* ============================================
+     SHIMMER EFFECT
+     ============================================ */
+
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    transform: translateX(-100%);
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* ============================================
+     SOFT FOCUS RING
+     ============================================ */
+
+  .focus-glow:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px rgb(var(--glow-void)),
+      0 0 0 4px rgba(var(--glow-lavender), 0.5),
+      0 0 20px rgba(var(--glow-lavender), 0.3);
+  }
+}
+
+@layer utilities {
+  /* Custom easing utilities */
+  .ease-out-expo {
+    transition-timing-function: var(--ease-out-expo);
+  }
+
+  .ease-out-back {
+    transition-timing-function: var(--ease-out-back);
+  }
+
+  .ease-elastic {
+    transition-timing-function: var(--ease-elastic);
+  }
+
+  /* Noise texture overlay */
+  .noise {
+    position: relative;
+  }
+
+  .noise::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+
+  /* Backdrop saturate for vivid glass */
+  .backdrop-vivid {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
   }
 }

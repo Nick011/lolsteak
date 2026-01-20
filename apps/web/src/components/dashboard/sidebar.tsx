@@ -9,7 +9,12 @@ const navigation = [
     name: 'Overview',
     href: '/dashboard',
     icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -23,7 +28,12 @@ const navigation = [
     name: 'Roster',
     href: '/dashboard/roster',
     icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -37,7 +47,12 @@ const navigation = [
     name: 'Events',
     href: '/dashboard/events',
     icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -51,7 +66,12 @@ const navigation = [
     name: 'Loot',
     href: '/dashboard/loot',
     icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -65,7 +85,12 @@ const navigation = [
     name: 'Settings',
     href: '/dashboard/settings',
     icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -102,8 +127,18 @@ export function Sidebar({ session, onClose }: SidebarProps) {
             onClick={onClose}
             className="lg:hidden p-2 text-slate-400 hover:text-white"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         )}
@@ -111,7 +146,7 @@ export function Sidebar({ session, onClose }: SidebarProps) {
 
       <nav className="flex-1 p-4 overflow-y-auto">
         <ul className="space-y-1">
-          {navigation.map((item) => {
+          {navigation.map(item => {
             const isActive = pathname === item.href
             return (
               <li key={item.name}>

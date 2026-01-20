@@ -20,10 +20,10 @@ export default function JoinGuildPage() {
   )
 
   const joinMutation = trpc.tenant.join.useMutation({
-    onSuccess: (tenant) => {
+    onSuccess: tenant => {
       router.push(`/dashboard?guild=${tenant.slug}`)
     },
-    onError: (err) => {
+    onError: err => {
       setError(err.message)
     },
   })
@@ -66,7 +66,7 @@ export default function JoinGuildPage() {
                 type="text"
                 id="code"
                 value={code}
-                onChange={(e) => setCode(e.target.value.trim())}
+                onChange={e => setCode(e.target.value.trim())}
                 className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-lg tracking-widest"
                 placeholder="XXXXXXXX"
                 required
