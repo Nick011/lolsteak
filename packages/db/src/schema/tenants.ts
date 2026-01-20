@@ -38,6 +38,7 @@ export const tenants = pgTable('tenants', {
   discordServerId: varchar('discord_server_id', { length: 50 }),
   logoUrl: text('logo_url'),
   bannerUrl: text('banner_url'),
+  inviteCode: varchar('invite_code', { length: 20 }).unique(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
