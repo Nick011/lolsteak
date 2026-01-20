@@ -91,7 +91,7 @@ This project uses **shadcn/ui** for UI components and **Storybook** for componen
 import { motion } from 'framer-motion'
 
 // Basic animation
-<motion.div
+;<motion.div
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.3 }}

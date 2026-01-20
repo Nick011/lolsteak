@@ -1,3 +1,6 @@
+/* Import Satoshi and Clash Display from Fontshare */
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&f[]=clash-display@400,500,600,700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,9 +10,6 @@
    A dreamy, gradient mesh aesthetic with
    glassmorphism and flowing pastel accents
    ============================================ */
-
-/* Import Satoshi and Clash Display from Fontshare */
-@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&f[]=clash-display@400,500,600,700&display=swap');
 
 :root {
   /* Typography */
