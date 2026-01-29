@@ -15,6 +15,11 @@ vi.mock('@guild/db/schema', () => ({
     eventId: 'eventSignups.eventId',
     characterId: 'eventSignups.characterId',
   },
+  eventSoftReserves: {
+    id: 'eventSoftReserves.id',
+    eventId: 'eventSoftReserves.eventId',
+    characterId: 'eventSoftReserves.characterId',
+  },
   characters: { id: 'characters.id', memberId: 'characters.memberId' },
 }))
 

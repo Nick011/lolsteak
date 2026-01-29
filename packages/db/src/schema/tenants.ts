@@ -78,7 +78,13 @@ export const membersRelations = relations(members, ({ one }) => ({
 export interface TenantSettings {
   timezone?: string
   defaultRaidSize?: number
-  lootSystem?: 'dkp' | 'loot_council' | 'soft_reserve' | 'gdkp' | 'need_greed'
+  lootSystem?:
+    | 'personal'
+    | 'need_greed'
+    | 'dkp'
+    | 'epgp'
+    | 'loot_council'
+    | 'soft_reserve'
   features?: {
     events?: boolean
     lootTracking?: boolean

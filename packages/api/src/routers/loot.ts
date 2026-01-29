@@ -97,19 +97,21 @@ export const lootRouter = router({
   bulkImport: officerProcedure
     .input(
       z.object({
-        items: z.array(
-          z.object({
-            characterName: z.string(),
-            itemId: z.number().int().optional(),
-            itemName: z.string(),
-            itemLink: z.string().optional(),
-            source: z.string().optional(),
-            awardedAt: z.string().datetime(),
-            rollType: z.string().optional(),
-            importHash: z.string(),
-            metadata: z.record(z.unknown()).optional(),
-          })
-        ),
+        items: z
+          .array(
+            z.object({
+              characterName: z.string(),
+              itemId: z.number().int().optional(),
+              itemName: z.string(),
+              itemLink: z.string().optional(),
+              source: z.string().optional(),
+              awardedAt: z.string().datetime(),
+              rollType: z.string().optional(),
+              importHash: z.string(),
+              metadata: z.record(z.unknown()).optional(),
+            })
+          )
+          .max(500, 'Maximum 500 items per import'),
         importSource: z.string().default('gargul'),
       })
     )
@@ -129,7 +131,13 @@ export const lootRouter = router({
       })
       const hashSet = new Set(existingHashes.map(l => l.importHash))
 
-      const newItems = input.items.filter(item => !hashSet.has(item.importHash))
+      // Filter duplicates - both from DB and within the batch itself
+      const seen = new Set(hashSet)
+      const newItems = input.items.filter(item => {
+        if (seen.has(item.importHash)) return false
+        seen.add(item.importHash)
+        return true
+      })
 
       if (newItems.length === 0) {
         return { imported: 0, skipped: input.items.length }

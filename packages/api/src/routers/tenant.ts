@@ -127,11 +127,12 @@ export const tenantRouter = router({
             defaultRaidSize: z.number().min(1).max(100).optional(),
             lootSystem: z
               .enum([
+                'personal',
+                'need_greed',
                 'dkp',
+                'epgp',
                 'loot_council',
                 'soft_reserve',
-                'gdkp',
-                'need_greed',
               ])
               .optional(),
           })
