@@ -60,12 +60,26 @@ export const eventSignups = pgTable('event_signups', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
 
+export const eventSoftReserves = pgTable('event_soft_reserves', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  eventId: uuid('event_id')
+    .notNull()
+    .references(() => events.id, { onDelete: 'cascade' }),
+  characterId: uuid('character_id')
+    .notNull()
+    .references(() => characters.id, { onDelete: 'cascade' }),
+  itemId: integer('item_id').notNull(), // WoW item ID
+  itemName: varchar('item_name', { length: 255 }).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
 export const eventsRelations = relations(events, ({ one, many }) => ({
   tenant: one(tenants, {
     fields: [events.tenantId],
     references: [tenants.id],
   }),
   signups: many(eventSignups),
+  softReserves: many(eventSoftReserves),
 }))
 
 export const eventSignupsRelations = relations(eventSignups, ({ one }) => ({
@@ -78,6 +92,20 @@ export const eventSignupsRelations = relations(eventSignups, ({ one }) => ({
     references: [characters.id],
   }),
 }))
+
+export const eventSoftReservesRelations = relations(
+  eventSoftReserves,
+  ({ one }) => ({
+    event: one(events, {
+      fields: [eventSoftReserves.eventId],
+      references: [events.id],
+    }),
+    character: one(characters, {
+      fields: [eventSoftReserves.characterId],
+      references: [characters.id],
+    }),
+  })
+)
 
 export interface EventSettings {
   softReserveEnabled?: boolean

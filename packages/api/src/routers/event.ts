@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { router, tenantProcedure, officerProcedure } from '../trpc'
-import { events, eventSignups } from '@guild/db/schema'
+import { events, eventSignups, eventSoftReserves } from '@guild/db/schema'
 import { eq, and, gte } from '@guild/db'
 
 export const eventRouter = router({
@@ -42,6 +42,19 @@ export const eventRouter = router({
         where: and(eq(events.id, input.id), eq(events.tenantId, ctx.tenant.id)),
         with: {
           signups: {
+            with: {
+              character: {
+                with: {
+                  member: {
+                    with: {
+                      user: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          softReserves: {
             with: {
               character: {
                 with: {
@@ -103,6 +116,18 @@ export const eventRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Verify the event exists and belongs to the tenant
+      const event = await ctx.db.query.events.findFirst({
+        where: and(
+          eq(events.id, input.eventId),
+          eq(events.tenantId, ctx.tenant.id)
+        ),
+      })
+
+      if (!event) {
+        throw new Error('Event not found')
+      }
+
       // Verify the character belongs to the current member
       const character = await ctx.db.query.characters.findFirst({
         where: (c, { and, eq }) =>
@@ -178,5 +203,223 @@ export const eventRouter = router({
         )
 
       return { success: true }
+    }),
+
+  // Update an event (officers only)
+  update: officerProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        name: z.string().min(2).max(255).optional(),
+        description: z.string().optional(),
+        eventType: z
+          .enum(['raid', 'dungeon', 'pvp', 'social', 'other'])
+          .optional(),
+        startsAt: z.string().datetime().optional(),
+        endsAt: z.string().datetime().optional(),
+        location: z.string().max(255).optional(),
+        maxSize: z.number().int().positive().optional(),
+        settings: z.record(z.unknown()).optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, startsAt, endsAt, ...data } = input
+
+      // Verify the event belongs to the tenant
+      const existing = await ctx.db.query.events.findFirst({
+        where: and(eq(events.id, id), eq(events.tenantId, ctx.tenant.id)),
+      })
+
+      if (!existing) {
+        throw new Error('Event not found')
+      }
+
+      const [updated] = await ctx.db
+        .update(events)
+        .set({
+          ...data,
+          ...(startsAt !== undefined && { startsAt: new Date(startsAt) }),
+          ...(endsAt !== undefined && { endsAt: new Date(endsAt) }),
+          updatedAt: new Date(),
+        })
+        .where(eq(events.id, id))
+        .returning()
+
+      return updated
+    }),
+
+  // Delete an event (officers only)
+  delete: officerProcedure
+    .input(z.object({ id: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      // Verify the event belongs to the tenant
+      const existing = await ctx.db.query.events.findFirst({
+        where: and(eq(events.id, input.id), eq(events.tenantId, ctx.tenant.id)),
+      })
+
+      if (!existing) {
+        throw new Error('Event not found')
+      }
+
+      // Delete the event (CASCADE will handle signups)
+      await ctx.db.delete(events).where(eq(events.id, input.id))
+
+      return { success: true }
+    }),
+
+  // Soft reserve an item for an event
+  softReserve: tenantProcedure
+    .input(
+      z.object({
+        eventId: z.string().uuid(),
+        characterId: z.string().uuid(),
+        itemId: z.number().int(),
+        itemName: z.string().min(1).max(255),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Verify the event exists, belongs to tenant, and has soft reserves enabled
+      const event = await ctx.db.query.events.findFirst({
+        where: and(
+          eq(events.id, input.eventId),
+          eq(events.tenantId, ctx.tenant.id)
+        ),
+      })
+
+      if (!event) {
+        throw new Error('Event not found')
+      }
+
+      const settings = event.settings as {
+        softReserveEnabled?: boolean
+        softReserveLimit?: number
+      }
+      if (!settings?.softReserveEnabled) {
+        throw new Error('Soft reserves are not enabled for this event')
+      }
+
+      // Verify the character belongs to the current member
+      const character = await ctx.db.query.characters.findFirst({
+        where: (c, { and, eq }) =>
+          and(eq(c.id, input.characterId), eq(c.memberId, ctx.member.id)),
+      })
+
+      if (!character) {
+        throw new Error('Character not found or does not belong to you')
+      }
+
+      // Check if soft reserve limit is reached for this character
+      if (settings.softReserveLimit !== undefined) {
+        const existingReserves = await ctx.db.query.eventSoftReserves.findMany({
+          where: and(
+            eq(eventSoftReserves.eventId, input.eventId),
+            eq(eventSoftReserves.characterId, input.characterId)
+          ),
+        })
+
+        if (existingReserves.length >= settings.softReserveLimit) {
+          throw new Error(
+            `Soft reserve limit reached (${settings.softReserveLimit} items per player)`
+          )
+        }
+      }
+
+      // Check if this item is already soft reserved by this character
+      const existing = await ctx.db.query.eventSoftReserves.findFirst({
+        where: and(
+          eq(eventSoftReserves.eventId, input.eventId),
+          eq(eventSoftReserves.characterId, input.characterId),
+          eq(eventSoftReserves.itemId, input.itemId)
+        ),
+      })
+
+      if (existing) {
+        throw new Error('You have already soft reserved this item')
+      }
+
+      // Create the soft reserve
+      const [softReserve] = await ctx.db
+        .insert(eventSoftReserves)
+        .values({
+          eventId: input.eventId,
+          characterId: input.characterId,
+          itemId: input.itemId,
+          itemName: input.itemName,
+        })
+        .returning()
+
+      return softReserve
+    }),
+
+  // Remove a soft reserve
+  removeSoftReserve: tenantProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Find the soft reserve and verify ownership
+      const softReserve = await ctx.db.query.eventSoftReserves.findFirst({
+        where: eq(eventSoftReserves.id, input.id),
+        with: {
+          character: true,
+          event: true,
+        },
+      })
+
+      if (!softReserve) {
+        throw new Error('Soft reserve not found')
+      }
+
+      // Verify the event belongs to the tenant
+      if (softReserve.event.tenantId !== ctx.tenant.id) {
+        throw new Error('Soft reserve not found')
+      }
+
+      // Verify the character belongs to the current member
+      if (softReserve.character.memberId !== ctx.member.id) {
+        throw new Error('You can only remove your own soft reserves')
+      }
+
+      // Delete the soft reserve
+      await ctx.db
+        .delete(eventSoftReserves)
+        .where(eq(eventSoftReserves.id, input.id))
+
+      return { success: true }
+    }),
+
+  // Get all soft reserves for an event (for display)
+  getSoftReserves: tenantProcedure
+    .input(z.object({ eventId: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      // Verify the event belongs to the tenant
+      const event = await ctx.db.query.events.findFirst({
+        where: and(
+          eq(events.id, input.eventId),
+          eq(events.tenantId, ctx.tenant.id)
+        ),
+      })
+
+      if (!event) {
+        throw new Error('Event not found')
+      }
+
+      return ctx.db.query.eventSoftReserves.findMany({
+        where: eq(eventSoftReserves.eventId, input.eventId),
+        with: {
+          character: {
+            with: {
+              member: {
+                with: {
+                  user: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: (sr, { asc }) => asc(sr.createdAt),
+      })
     }),
 })
