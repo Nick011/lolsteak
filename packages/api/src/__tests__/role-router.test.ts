@@ -11,12 +11,35 @@ vi.mock('@guild/db', () => ({
 }))
 
 vi.mock('@guild/db/schema', () => ({
-  roles: { id: 'roles.id', tenantId: 'roles.tenantId', name: 'roles.name', position: 'roles.position', isDefault: 'roles.isDefault' },
-  memberRoles: { memberId: 'memberRoles.memberId', roleId: 'memberRoles.roleId' },
+  roles: {
+    id: 'roles.id',
+    tenantId: 'roles.tenantId',
+    name: 'roles.name',
+    position: 'roles.position',
+    isDefault: 'roles.isDefault',
+  },
+  memberRoles: {
+    memberId: 'memberRoles.memberId',
+    roleId: 'memberRoles.roleId',
+  },
   members: { id: 'members.id', tenantId: 'members.tenantId' },
   DEFAULT_ROLES: [
-    { name: 'Guild Master', color: '#F59E0B', position: 0, isDefault: false, isAdmin: true, permissions: {} },
-    { name: 'Member', color: '#6B7280', position: 3, isDefault: true, isAdmin: false, permissions: {} },
+    {
+      name: 'Guild Master',
+      color: '#F59E0B',
+      position: 0,
+      isDefault: false,
+      isAdmin: true,
+      permissions: {},
+    },
+    {
+      name: 'Member',
+      color: '#6B7280',
+      position: 3,
+      isDefault: true,
+      isAdmin: false,
+      permissions: {},
+    },
   ],
 }))
 
@@ -820,7 +843,10 @@ describe('roleRouter', () => {
 
     it.skip('TODO: Fix mock setup - should reject removing role from different tenant', async () => {
       const mockDb = createMockDb()
-      const wrongTenantRole = { ...mockRole1, tenantId: '16161616-1616-1616-1616-161616161616' }
+      const wrongTenantRole = {
+        ...mockRole1,
+        tenantId: '16161616-1616-1616-1616-161616161616',
+      }
       const assignment = {
         id: '17171717-1717-1717-1717-171717171717',
         memberId: mockRegularMember.id,

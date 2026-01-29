@@ -11,7 +11,10 @@ vi.mock('@guild/db', () => ({
 vi.mock('@guild/db/schema', () => ({
   members: { id: 'members.id', tenantId: 'members.tenantId' },
   users: { id: 'users.id' },
-  characters: { memberId: 'characters.memberId', tenantId: 'characters.tenantId' },
+  characters: {
+    memberId: 'characters.memberId',
+    tenantId: 'characters.tenantId',
+  },
   roles: { id: 'roles.id' },
   memberRoles: { memberId: 'memberRoles.memberId' },
   DEFAULT_ROLES: [],

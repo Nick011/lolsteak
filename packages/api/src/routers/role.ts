@@ -472,29 +472,29 @@ export const roleRouter = router({
       where: eq(roles.tenantId, targetTenantId),
     })
 
-      if (existingRoles) {
-        throw new TRPCError({
-          code: 'CONFLICT',
-          message: 'Roles already exist for this guild',
-        })
-      }
+    if (existingRoles) {
+      throw new TRPCError({
+        code: 'CONFLICT',
+        message: 'Roles already exist for this guild',
+      })
+    }
 
-      // Insert default roles
-      const createdRoles = await ctx.db
-        .insert(roles)
-        .values(
-          DEFAULT_ROLES.map(role => ({
-            tenantId: targetTenantId,
-            name: role.name,
-            color: role.color,
-            position: role.position,
-            isDefault: role.isDefault,
-            isAdmin: role.isAdmin,
-            permissions: role.permissions,
-          }))
-        )
-        .returning()
+    // Insert default roles
+    const createdRoles = await ctx.db
+      .insert(roles)
+      .values(
+        DEFAULT_ROLES.map(role => ({
+          tenantId: targetTenantId,
+          name: role.name,
+          color: role.color,
+          position: role.position,
+          isDefault: role.isDefault,
+          isAdmin: role.isAdmin,
+          permissions: role.permissions,
+        }))
+      )
+      .returning()
 
-      return createdRoles
-    }),
+    return createdRoles
+  }),
 })
