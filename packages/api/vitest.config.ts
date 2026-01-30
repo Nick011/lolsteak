@@ -7,5 +7,9 @@ export default defineProject({
     globals: true,
     include: ['**/*.{test,spec}.ts'],
     exclude: ['**/node_modules/**'],
+    setupFiles: ['./src/__tests__/setup.ts'],
+    env: {
+      DATABASE_URL: 'postgresql://mock:mock@localhost:5432/mock',
+    },
   },
 })

@@ -7,6 +7,7 @@ vi.mock('@guild/db', () => ({
   and: vi.fn((...args) => ({ _and: args })),
   desc: vi.fn(a => ({ _desc: a })),
   ilike: vi.fn((a, b) => ({ _ilike: [a, b] })),
+  sql: vi.fn((...args) => ({ _sql: args })),
 }))
 
 vi.mock('@guild/db/schema', () => ({
@@ -22,6 +23,18 @@ vi.mock('@guild/db/schema', () => ({
     id: 'characters.id',
     tenantId: 'characters.tenantId',
     name: 'characters.name',
+  },
+  dkpTransactions: {
+    id: 'dkpTransactions.id',
+    tenantId: 'dkpTransactions.tenantId',
+    memberId: 'dkpTransactions.memberId',
+  },
+  dkpBalances: {
+    id: 'dkpBalances.id',
+    tenantId: 'dkpBalances.tenantId',
+    memberId: 'dkpBalances.memberId',
+    currentBalance: 'dkpBalances.currentBalance',
+    lifetimeSpent: 'dkpBalances.lifetimeSpent',
   },
 }))
 
@@ -47,6 +60,13 @@ const createMockDb = () => {
       },
       characters: {
         findFirst: vi.fn(),
+        findMany: vi.fn(),
+      },
+      dkpBalances: {
+        findFirst: vi.fn(),
+        findMany: vi.fn(),
+      },
+      dkpTransactions: {
         findMany: vi.fn(),
       },
     },
@@ -605,8 +625,9 @@ describe('lootRouter', () => {
     it('should import multiple items', async () => {
       const mockDb = createMockDb()
       mockDb.query.characters.findMany.mockResolvedValueOnce([mockCharacter])
+      mockDb.query.dkpBalances.findMany.mockResolvedValueOnce([])
       mockDb.query.lootHistory.findMany.mockResolvedValueOnce([])
-      ;(mockDb.insert as any).valuesFn.mockResolvedValueOnce(undefined)
+      ;(mockDb.insert as any).returningFn.mockResolvedValueOnce([])
 
       const caller = createCaller({
         db: mockDb as unknown as Context['db'],
@@ -672,10 +693,19 @@ describe('lootRouter', () => {
     it('should skip duplicates by importHash', async () => {
       const mockDb = createMockDb()
       mockDb.query.characters.findMany.mockResolvedValueOnce([mockCharacter])
+      mockDb.query.dkpBalances.findMany.mockResolvedValueOnce([])
       mockDb.query.lootHistory.findMany.mockResolvedValueOnce([
         { importHash: 'hash1' },
       ])
-      ;(mockDb.insert as any).valuesFn.mockResolvedValueOnce(undefined)
+      ;(mockDb.insert as any).returningFn.mockResolvedValueOnce([
+        {
+          ...mockLootEntry,
+          id: 'loot-1',
+          importHash: 'hash2',
+          characterName: 'TestWarrior',
+          metadata: {},
+        },
+      ])
 
       const caller = createCaller({
         db: mockDb as unknown as Context['db'],
@@ -738,8 +768,22 @@ describe('lootRouter', () => {
           name: 'TestMage',
         },
       ])
+      mockDb.query.dkpBalances.findMany.mockResolvedValueOnce([])
       mockDb.query.lootHistory.findMany.mockResolvedValueOnce([])
-      ;(mockDb.insert as any).valuesFn.mockResolvedValueOnce(undefined)
+      ;(mockDb.insert as any).returningFn.mockResolvedValueOnce([
+        {
+          ...mockLootEntry,
+          id: 'loot-1',
+          characterName: 'testwarrior',
+          metadata: {},
+        },
+        {
+          ...mockLootEntry,
+          id: 'loot-2',
+          characterName: 'TESTMAGE',
+          metadata: {},
+        },
+      ])
 
       const caller = createCaller({
         db: mockDb as unknown as Context['db'],
@@ -791,11 +835,20 @@ describe('lootRouter', () => {
     it('should return imported and skipped counts', async () => {
       const mockDb = createMockDb()
       mockDb.query.characters.findMany.mockResolvedValueOnce([mockCharacter])
+      mockDb.query.dkpBalances.findMany.mockResolvedValueOnce([])
       mockDb.query.lootHistory.findMany.mockResolvedValueOnce([
         { importHash: 'hash1' },
         { importHash: 'hash2' },
       ])
-      ;(mockDb.insert as any).valuesFn.mockResolvedValueOnce(undefined)
+      ;(mockDb.insert as any).returningFn.mockResolvedValueOnce([
+        {
+          ...mockLootEntry,
+          id: 'loot-3',
+          importHash: 'hash3',
+          characterName: 'TestWarrior',
+          metadata: {},
+        },
+      ])
 
       const caller = createCaller({
         db: mockDb as unknown as Context['db'],
@@ -842,6 +895,7 @@ describe('lootRouter', () => {
     it('should return early if all items are duplicates', async () => {
       const mockDb = createMockDb()
       mockDb.query.characters.findMany.mockResolvedValueOnce([mockCharacter])
+      mockDb.query.dkpBalances.findMany.mockResolvedValueOnce([])
       mockDb.query.lootHistory.findMany.mockResolvedValueOnce([
         { importHash: 'hash1' },
         { importHash: 'hash2' },
@@ -914,6 +968,325 @@ describe('lootRouter', () => {
       // Verify it didn't even check for characters
       expect(mockDb.query.characters.findMany).not.toHaveBeenCalled()
       expect(mockDb.insert).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('DKP Integration - record', () => {
+    const mockDkpBalance = {
+      id: 'dddddddd-dddd-dddd-dddd-dddddddddddd',
+      tenantId: '22222222-2222-2222-2222-222222222222',
+      memberId: mockRegularMember.id,
+      currentBalance: 500,
+      lifetimeEarned: 1000,
+      lifetimeSpent: 500,
+      lastUpdated: new Date(),
+    }
+
+    it('should deduct DKP when recording loot with cost', async () => {
+      const mockDb = createMockDb()
+      const characterWithMember = {
+        ...mockCharacter,
+        memberId: mockRegularMember.id,
+      }
+      mockDb.query.characters.findFirst.mockResolvedValueOnce(
+        characterWithMember
+      )
+      mockDb.query.dkpBalances.findFirst.mockResolvedValueOnce(mockDkpBalance)
+
+      const newLoot = {
+        ...mockLootEntry,
+        id: 'new-loot-id',
+        cost: 150,
+      }
+      ;(mockDb.insert as any).returningFn.mockResolvedValueOnce([newLoot])
+
+      const caller = createCaller({
+        db: mockDb as unknown as Context['db'],
+        session: {
+          user: {
+            id: '55555555-5555-5555-5555-555555555555',
+            name: 'Officer',
+            email: 'officer@test.com',
+          },
+          expires: new Date(Date.now() + 86400000).toISOString(),
+        },
+        tenant: mockTenant as Context['tenant'],
+        member: mockOfficerMember as Context['member'],
+      })
+
+      await caller.loot.record({
+        characterName: 'TestWarrior',
+        characterId: mockCharacter.id,
+        itemName: "Finkle's Lava Dredger",
+        cost: 150,
+      })
+
+      // Verify DKP transaction was created
+      expect(mockDb.insert).toHaveBeenCalledTimes(2) // Once for loot, once for DKP transaction
+      const insertCalls = (mockDb.insert as any).mock.calls
+
+      // Verify DKP balance was updated
+      expect(mockDb.update).toHaveBeenCalled()
+    })
+
+    it('should not deduct DKP when loot has no cost', async () => {
+      const mockDb = createMockDb()
+      mockDb.query.characters.findFirst.mockResolvedValueOnce(mockCharacter)
+      const newLoot = {
+        ...mockLootEntry,
+        id: 'new-loot-id',
+        cost: null,
+      }
+      ;(mockDb.insert as any).returningFn.mockResolvedValueOnce([newLoot])
+
+      const caller = createCaller({
+        db: mockDb as unknown as Context['db'],
+        session: {
+          user: {
+            id: '55555555-5555-5555-5555-555555555555',
+            name: 'Officer',
+            email: 'officer@test.com',
+          },
+          expires: new Date(Date.now() + 86400000).toISOString(),
+        },
+        tenant: mockTenant as Context['tenant'],
+        member: mockOfficerMember as Context['member'],
+      })
+
+      await caller.loot.record({
+        characterName: 'TestWarrior',
+        itemName: 'Some Item',
+      })
+
+      // Only loot insert, no DKP operations
+      expect(mockDb.insert).toHaveBeenCalledTimes(1)
+      expect(mockDb.query.dkpBalances.findFirst).not.toHaveBeenCalled()
+    })
+
+    it('should skip DKP deduction when deductDkp is false', async () => {
+      const mockDb = createMockDb()
+      mockDb.query.characters.findFirst.mockResolvedValueOnce(mockCharacter)
+      const newLoot = {
+        ...mockLootEntry,
+        id: 'new-loot-id',
+        cost: 150,
+      }
+      ;(mockDb.insert as any).returningFn.mockResolvedValueOnce([newLoot])
+
+      const caller = createCaller({
+        db: mockDb as unknown as Context['db'],
+        session: {
+          user: {
+            id: '55555555-5555-5555-5555-555555555555',
+            name: 'Officer',
+            email: 'officer@test.com',
+          },
+          expires: new Date(Date.now() + 86400000).toISOString(),
+        },
+        tenant: mockTenant as Context['tenant'],
+        member: mockOfficerMember as Context['member'],
+      })
+
+      await caller.loot.record({
+        characterName: 'TestWarrior',
+        itemName: 'Some Item',
+        cost: 150,
+        deductDkp: false,
+      })
+
+      // Only loot insert, no DKP operations
+      expect(mockDb.insert).toHaveBeenCalledTimes(1)
+      expect(mockDb.query.dkpBalances.findFirst).not.toHaveBeenCalled()
+    })
+
+    it('should handle insufficient DKP balance', async () => {
+      const mockDb = createMockDb()
+      const characterWithMember = {
+        ...mockCharacter,
+        memberId: mockRegularMember.id,
+      }
+      // When characterId is provided, only one findFirst call happens (to get full character)
+      mockDb.query.characters.findFirst.mockResolvedValueOnce(
+        characterWithMember
+      )
+
+      const lowBalance = { ...mockDkpBalance, currentBalance: 50 }
+      mockDb.query.dkpBalances.findFirst.mockResolvedValueOnce(lowBalance)
+
+      const newLoot = {
+        ...mockLootEntry,
+        id: 'new-loot-id',
+        cost: 150,
+        metadata: {},
+      }
+      ;(mockDb.insert as any).returningFn.mockResolvedValueOnce([newLoot])
+
+      const caller = createCaller({
+        db: mockDb as unknown as Context['db'],
+        session: {
+          user: {
+            id: '55555555-5555-5555-5555-555555555555',
+            name: 'Officer',
+            email: 'officer@test.com',
+          },
+          expires: new Date(Date.now() + 86400000).toISOString(),
+        },
+        tenant: mockTenant as Context['tenant'],
+        member: mockOfficerMember as Context['member'],
+      })
+
+      await caller.loot.record({
+        characterName: 'TestWarrior',
+        characterId: mockCharacter.id,
+        itemName: "Finkle's Lava Dredger",
+        cost: 150,
+      })
+
+      // Loot was recorded
+      expect(mockDb.insert).toHaveBeenCalledTimes(1)
+
+      // Metadata was updated with DKP not deducted info
+      expect(mockDb.update).toHaveBeenCalled()
+      expect((mockDb.update as any).setFn).toHaveBeenCalledWith(
+        expect.objectContaining({
+          metadata: expect.objectContaining({
+            dkpNotDeducted: true,
+            dkpNotDeductedReason: 'insufficient_balance',
+          }),
+        })
+      )
+    })
+  })
+
+  describe('DKP Integration - bulkImport', () => {
+    it('should return dkpDeducted and dkpSkipped counts', async () => {
+      const mockDb = createMockDb()
+      const characterWithMember = {
+        ...mockCharacter,
+        memberId: mockRegularMember.id,
+      }
+      mockDb.query.characters.findMany.mockResolvedValueOnce([
+        characterWithMember,
+      ])
+
+      const mockDkpBalance = {
+        id: 'dddddddd-dddd-dddd-dddd-dddddddddddd',
+        tenantId: '22222222-2222-2222-2222-222222222222',
+        memberId: mockRegularMember.id,
+        currentBalance: 500,
+        lifetimeEarned: 1000,
+        lifetimeSpent: 500,
+        lastUpdated: new Date(),
+      }
+      mockDb.query.dkpBalances.findMany.mockResolvedValueOnce([mockDkpBalance])
+      mockDb.query.lootHistory.findMany.mockResolvedValueOnce([])
+
+      const insertedLoot = [
+        {
+          ...mockLootEntry,
+          id: 'loot-1',
+          cost: 100,
+          characterName: 'TestWarrior',
+          metadata: {},
+        },
+        {
+          ...mockLootEntry,
+          id: 'loot-2',
+          cost: null,
+          characterName: 'TestWarrior',
+          metadata: {},
+        },
+      ]
+      ;(mockDb.insert as any).returningFn.mockResolvedValueOnce(insertedLoot)
+
+      const caller = createCaller({
+        db: mockDb as unknown as Context['db'],
+        session: {
+          user: {
+            id: '55555555-5555-5555-5555-555555555555',
+            name: 'Officer',
+            email: 'officer@test.com',
+          },
+          expires: new Date(Date.now() + 86400000).toISOString(),
+        },
+        tenant: mockTenant as Context['tenant'],
+        member: mockOfficerMember as Context['member'],
+      })
+
+      const result = await caller.loot.bulkImport({
+        items: [
+          {
+            characterName: 'TestWarrior',
+            itemName: 'Item with cost',
+            cost: 100,
+            awardedAt: '2026-01-28T20:30:00Z',
+            importHash: 'hash1',
+          },
+          {
+            characterName: 'TestWarrior',
+            itemName: 'Item without cost',
+            awardedAt: '2026-01-28T20:45:00Z',
+            importHash: 'hash2',
+          },
+        ],
+        importSource: 'gargul',
+      })
+
+      expect(result.imported).toBe(2)
+      expect(result.dkpDeducted).toBe(1)
+      expect(result.dkpSkipped).toBe(0)
+    })
+
+    it('should skip DKP for items without member link', async () => {
+      const mockDb = createMockDb()
+      const characterNoMember = { ...mockCharacter, memberId: null }
+      mockDb.query.characters.findMany.mockResolvedValueOnce([
+        characterNoMember,
+      ])
+      mockDb.query.dkpBalances.findMany.mockResolvedValueOnce([])
+      mockDb.query.lootHistory.findMany.mockResolvedValueOnce([])
+
+      const insertedLoot = [
+        {
+          ...mockLootEntry,
+          id: 'loot-1',
+          cost: 100,
+          characterName: 'TestWarrior',
+          metadata: {},
+        },
+      ]
+      ;(mockDb.insert as any).returningFn.mockResolvedValueOnce(insertedLoot)
+
+      const caller = createCaller({
+        db: mockDb as unknown as Context['db'],
+        session: {
+          user: {
+            id: '55555555-5555-5555-5555-555555555555',
+            name: 'Officer',
+            email: 'officer@test.com',
+          },
+          expires: new Date(Date.now() + 86400000).toISOString(),
+        },
+        tenant: mockTenant as Context['tenant'],
+        member: mockOfficerMember as Context['member'],
+      })
+
+      const result = await caller.loot.bulkImport({
+        items: [
+          {
+            characterName: 'TestWarrior',
+            itemName: 'Item with cost',
+            cost: 100,
+            awardedAt: '2026-01-28T20:30:00Z',
+            importHash: 'hash1',
+          },
+        ],
+        importSource: 'gargul',
+      })
+
+      expect(result.imported).toBe(1)
+      expect(result.dkpDeducted).toBe(0)
+      expect(result.dkpSkipped).toBe(1)
     })
   })
 })

@@ -10,6 +10,7 @@ export * from './roles'
 export * from './characters'
 export * from './events'
 export * from './loot'
+export * from './dkp'
 
 // Integration tables
 export * from './integrations'
