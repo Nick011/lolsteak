@@ -40,9 +40,64 @@ bun add -d <package>  # Add a dev dependency
 
 **Framework:** This project uses **Vitest** for testing.
 
-**Test Type:** Write **unit tests only**. Do NOT write e2e or integration tests at this time.
+**Test Type:** Write **unit tests ONLY**. Do NOT write integration tests, e2e tests, or any tests that require real infrastructure.
 
-**Rules:**
+### Mocking Requirements (CRITICAL)
+
+**ALL external dependencies MUST be mocked.** Tests must run completely offline with zero network or database access.
+
+**Database Mocking:**
+
+```typescript
+// Mock @guild/db BEFORE any imports that use it
+vi.mock('@guild/db', () => ({
+  eq: vi.fn((a, b) => ({ _eq: [a, b] })),
+  and: vi.fn((...args) => ({ _and: args })),
+  desc: vi.fn(a => ({ _desc: a })),
+  sql: vi.fn((...args) => ({ _sql: args })),
+  // Add other operators as needed
+}))
+
+vi.mock('@guild/db/schema', () => ({
+  // Mock table schemas as simple objects
+  tableName: {
+    id: 'tableName.id',
+    tenantId: 'tableName.tenantId',
+    // ... other columns
+  },
+}))
+```
+
+**Mock Database Pattern:**
+
+```typescript
+const createMockDb = () => {
+  const returningFn = vi.fn()
+  const whereFn = vi.fn(() => ({ returning: returningFn }))
+  const setFn = vi.fn(() => ({ where: whereFn }))
+  const valuesFn = vi.fn(() => ({ returning: returningFn }))
+
+  return {
+    query: {
+      tableName: {
+        findFirst: vi.fn(),
+        findMany: vi.fn(),
+      },
+    },
+    insert: vi.fn(() => ({ values: valuesFn })),
+    update: vi.fn(() => ({ set: setFn })),
+    delete: vi.fn(() => ({ where: vi.fn() })),
+  }
+}
+```
+
+**Network/API Mocking:**
+
+- Mock all fetch calls, HTTP clients, and external API calls
+- Mock authentication services and third-party integrations
+- Use `vi.mock()` for modules that make network requests
+
+### Test Rules
 
 - Every new feature requires corresponding unit tests
 - When refactoring, update existing tests to match the new implementation
@@ -51,7 +106,15 @@ bun add -d <package>  # Add a dev dependency
 - **ALL tests must pass** before pushing to GitHub
 - If tests fail, fix them before proceeding
 
-**Never push code with failing tests.**
+### What NOT To Do
+
+- ❌ Never connect to real databases in tests
+- ❌ Never make real HTTP/network requests in tests
+- ❌ Never use real DATABASE_URL or connection strings
+- ❌ Never write integration or e2e tests
+- ❌ Never import actual database clients without mocking them first
+
+**Never push code with failing tests or tests that require network/database access.**
 
 ## UI Components
 
