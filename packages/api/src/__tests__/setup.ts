@@ -11,8 +11,8 @@ vi.mock('@guild/db/client', () => ({
 
 // Mock the entire @guild/db module to prevent database client initialization
 vi.mock('@guild/db', async () => {
-  const actual =
-    await vi.importActual<typeof import('drizzle-orm')>('drizzle-orm')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const actual = (await vi.importActual('drizzle-orm')) as any
   return {
     db: {},
     migrationClient: {},

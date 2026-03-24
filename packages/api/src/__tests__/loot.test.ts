@@ -1023,7 +1023,6 @@ describe('lootRouter', () => {
 
       // Verify DKP transaction was created
       expect(mockDb.insert).toHaveBeenCalledTimes(2) // Once for loot, once for DKP transaction
-      const insertCalls = (mockDb.insert as any).mock.calls
 
       // Verify DKP balance was updated
       expect(mockDb.update).toHaveBeenCalled()

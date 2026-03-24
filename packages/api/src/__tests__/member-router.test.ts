@@ -71,6 +71,12 @@ const mockTenant = {
   gameType: 'wow_classic' as const,
   description: null,
   ownerId: '11111111-1111-1111-1111-111111111111',
+  settings: {},
+  customDomain: null,
+  discordServerId: null,
+  logoUrl: null,
+  bannerUrl: null,
+  inviteCode: null,
   createdAt: new Date(),
   updatedAt: new Date(),
 }

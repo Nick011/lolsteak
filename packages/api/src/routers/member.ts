@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { router, tenantProcedure, officerProcedure } from '../trpc'
-import { members, users, characters } from '@guild/db/schema'
-import { roles, memberRoles, DEFAULT_ROLES } from '@guild/db/schema'
+import { members, characters, memberRoles } from '@guild/db/schema'
 import { eq, and, inArray } from '@guild/db'
 import { TRPCError } from '@trpc/server'
 

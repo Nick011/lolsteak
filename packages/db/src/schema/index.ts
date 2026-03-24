@@ -11,6 +11,10 @@ export * from './characters'
 export * from './events'
 export * from './loot'
 export * from './dkp'
+export * from './announcements'
+export * from './faq'
+export * from './guides'
+export * from './forums'
 
 // Integration tables
 export * from './integrations'
