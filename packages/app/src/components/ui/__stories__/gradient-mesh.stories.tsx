@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { GradientMesh, GradientMeshStatic } from '../gradient-mesh'
 import { Card, CardHeader, CardTitle, CardContent } from '../card'
 import { Button } from '../button'

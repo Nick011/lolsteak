@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { RoleBadges } from '../../roster/role-badges'
 
 const meta: Meta<typeof RoleBadges> = {

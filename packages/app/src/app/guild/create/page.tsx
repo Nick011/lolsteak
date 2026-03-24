@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { trpc } from '~/lib/trpc/client'
 import { Button } from '~/components/ui/button'
-import type { Metadata } from 'next'
-
 const gameTypes = [
   { value: 'wow_classic', label: 'WoW Classic / TBC / Wrath' },
   { value: 'wow_retail', label: 'WoW Retail' },

@@ -19,8 +19,10 @@ export default [
       '**/.serena/**',
       '**/drizzle/**',
     ],
-  }, // Base ESLint recommended rules
-  eslint.configs.recommended, // TypeScript files configuration
+  },
+  // Base ESLint recommended rules
+  eslint.configs.recommended,
+  // TypeScript files configuration
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
@@ -41,6 +43,10 @@ export default [
         __filename: 'readonly',
         // ES2021 globals
         globalThis: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
         // CommonJS
         module: 'readonly',
         require: 'readonly',
@@ -60,6 +66,27 @@ export default [
         FormData: 'readonly',
         Blob: 'readonly',
         File: 'readonly',
+        // DOM element types
+        HTMLDivElement: 'readonly',
+        HTMLButtonElement: 'readonly',
+        HTMLInputElement: 'readonly',
+        HTMLTextAreaElement: 'readonly',
+        HTMLElement: 'readonly',
+        HTMLSpanElement: 'readonly',
+        HTMLParagraphElement: 'readonly',
+        HTMLTableElement: 'readonly',
+        HTMLTableSectionElement: 'readonly',
+        HTMLTableRowElement: 'readonly',
+        HTMLTableCellElement: 'readonly',
+        HTMLTableCaptionElement: 'readonly',
+        FileReader: 'readonly',
+        // Browser APIs
+        TextEncoder: 'readonly',
+        TextDecoder: 'readonly',
+        btoa: 'readonly',
+        atob: 'readonly',
+        confirm: 'readonly',
+        alert: 'readonly',
         // React globals (React 19 JSX runtime)
         React: 'readonly',
         JSX: 'readonly',
@@ -82,14 +109,15 @@ export default [
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-non-null-assertion': 'warn',
-      '@typescript-eslint/triple-slash-reference': 'off', // Next.js generated types use this
+      '@typescript-eslint/triple-slash-reference': 'off',
 
       // General rules
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error',
       'no-var': 'error',
     },
-  }, // JavaScript files configuration
+  },
+  // JavaScript files configuration
   {
     files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
     languageOptions: {
@@ -115,7 +143,15 @@ export default [
       'prefer-const': 'error',
       'no-var': 'error',
     },
-  }, // Disable formatting rules that conflict with Prettier
+  },
+  // Disable formatting rules that conflict with Prettier
   prettier,
   ...storybook.configs['flat/recommended'],
+  // Override for Storybook stories - allow @storybook/react imports in stories
+  {
+    files: ['**/*.stories.tsx', '**/*.stories.ts'],
+    rules: {
+      'storybook/no-renderer-packages': 'off',
+    },
+  },
 ]

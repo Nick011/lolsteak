@@ -28,14 +28,14 @@ interface MemberActionsProps {
 }
 
 export function MemberActions({
-  memberId,
-  memberName,
-  currentNickname,
-  currentRank,
-  onNicknameUpdate,
-  onPromote,
-  onDemote,
-  onKick,
+ memberId,
+ memberName,
+ currentNickname,
+ currentRank: _currentRank,
+ onNicknameUpdate,
+ onPromote,
+ onDemote,
+ onKick,
 }: MemberActionsProps) {
   const [nickname, setNickname] = useState(currentNickname || '')
   const [isNicknameDialogOpen, setIsNicknameDialogOpen] = useState(false)

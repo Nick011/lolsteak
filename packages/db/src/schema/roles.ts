@@ -1,13 +1,12 @@
 import {
-  pgTable,
-  text,
-  timestamp,
-  uuid,
-  varchar,
-  jsonb,
-  integer,
-  boolean,
-  uniqueIndex,
+ pgTable,
+ timestamp,
+ uuid,
+ varchar,
+ jsonb,
+ integer,
+ boolean,
+ uniqueIndex,
 } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 import { tenants, members } from './tenants'

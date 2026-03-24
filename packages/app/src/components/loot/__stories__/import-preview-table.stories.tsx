@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { ImportPreviewTable } from '../import-preview-table'
 import type { ParsedLootItem } from '~/lib/gargul-parser'
 

@@ -10,16 +10,16 @@ import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
 
 interface GuideContentProps {
-  title: string
-  category: string
-  tags: string[]
-  content: string
-  authorName: string
-  createdAt: Date
-  updatedAt: Date
-  viewCount: number
-  canEdit?: boolean
-  onEdit?: () => void
+ title: string
+ category: string
+ tags: string[] | null
+ content: string
+ authorName: string | null
+ createdAt: Date
+ updatedAt: Date
+ viewCount: number
+ canEdit?: boolean
+ onEdit?: () => void
 }
 
 const categoryLabels: Record<string, string> = {
@@ -102,19 +102,19 @@ export function GuideContent({
             </div>
           </div>
 
-          {/* Tags */}
-          {tags.length > 0 && (
-            <div className="flex items-start gap-2">
-              <Tag className="h-4 w-4 text-slate-500 mt-1 flex-shrink-0" />
-              <div className="flex flex-wrap gap-2">
-                {tags.map(tag => (
-                  <Badge key={tag} variant="outline" size="sm">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
+{/* Tags */}
+ {tags && tags.length > 0 && (
+ <div className="flex items-start gap-2">
+ <Tag className="h-4 w-4 text-slate-500 mt-1 flex-shrink-0" />
+ <div className="flex flex-wrap gap-2">
+ {tags.map(tag => (
+ <Badge key={tag} variant="outline" size="sm">
+ {tag}
+ </Badge>
+ ))}
+ </div>
+ </div>
+ )}
 
           <Separator />
         </CardHeader>

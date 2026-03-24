@@ -1,5 +1,5 @@
 /* eslint-disable storybook/no-renderer-packages */
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useState } from 'react'
 import {
   LootSystemSettings,
@@ -40,33 +40,57 @@ function LootSystemSettingsWrapper({
 }
 
 export const Default: Story = {
-  render: () => <LootSystemSettingsWrapper />,
+ args: {
+ onChange: () => {},
+ },
+ render: () => <LootSystemSettingsWrapper />,
 }
 
 export const WithPersonalLoot: Story = {
-  render: () => <LootSystemSettingsWrapper initialValue="personal" />,
+ args: {
+ onChange: () => {},
+ },
+ render: () => <LootSystemSettingsWrapper initialValue="personal" />,
 }
 
 export const WithNeedGreed: Story = {
-  render: () => <LootSystemSettingsWrapper initialValue="need_greed" />,
+ args: {
+ onChange: () => {},
+ },
+ render: () => <LootSystemSettingsWrapper initialValue="need_greed" />,
 }
 
 export const WithDKP: Story = {
-  render: () => <LootSystemSettingsWrapper initialValue="dkp" />,
+ args: {
+ onChange: () => {},
+ },
+ render: () => <LootSystemSettingsWrapper initialValue="dkp" />,
 }
 
 export const WithEPGP: Story = {
-  render: () => <LootSystemSettingsWrapper initialValue="epgp" />,
+ args: {
+ onChange: () => {},
+ },
+ render: () => <LootSystemSettingsWrapper initialValue="epgp" />,
 }
 
 export const WithLootCouncil: Story = {
-  render: () => <LootSystemSettingsWrapper initialValue="loot_council" />,
+ args: {
+ onChange: () => {},
+ },
+ render: () => <LootSystemSettingsWrapper initialValue="loot_council" />,
 }
 
 export const WithSoftReserve: Story = {
-  render: () => <LootSystemSettingsWrapper initialValue="soft_reserve" />,
+ args: {
+ onChange: () => {},
+ },
+ render: () => <LootSystemSettingsWrapper initialValue="soft_reserve" />,
 }
 
 export const Disabled: Story = {
-  render: () => <LootSystemSettingsWrapper initialValue="dkp" disabled />,
+ args: {
+ onChange: () => {},
+ },
+ render: () => <LootSystemSettingsWrapper initialValue="dkp" disabled />,
 }

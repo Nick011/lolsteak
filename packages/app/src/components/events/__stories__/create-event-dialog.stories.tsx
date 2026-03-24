@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { CreateEventDialog } from '../create-event-dialog'
 import { useState } from 'react'
 import { Button } from '~/components/ui/button'

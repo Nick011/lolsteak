@@ -4,16 +4,15 @@ import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { Badge } from '~/components/ui/badge'
 import {
-  Calendar,
-  Clock,
-  MapPin,
-  Users,
-  Swords,
-  Castle,
-  Trophy,
-  PartyPopper,
-  Star,
-  AlertCircle,
+ Calendar,
+ Clock,
+ MapPin,
+ Users,
+ Swords,
+ Castle,
+ Trophy,
+ PartyPopper,
+ Star,
 } from 'lucide-react'
 
 // Event type configurations
@@ -89,13 +88,12 @@ export function EventCard({ event }: EventCardProps) {
   const Icon = config.icon
 
   // Calculate signup stats
-  const confirmedSignups = event.signups.filter(
-    s => s.status === 'confirmed'
-  ).length
-  const tentativeSignups = event.signups.filter(
-    s => s.status === 'tentative'
-  ).length
-  const totalSignups = confirmedSignups + tentativeSignups
+ const confirmedSignups = event.signups.filter(
+ s => s.status === 'confirmed'
+ ).length
+ const tentativeSignups = event.signups.filter(
+ s => s.status === 'tentative'
+ ).length
 
   // Check if event is happening soon (within 24 hours)
   const now = new Date()

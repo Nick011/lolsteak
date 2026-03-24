@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { CharacterList } from '../../roster/character-list'
 
 const meta: Meta<typeof CharacterList> = {

@@ -1,5 +1,5 @@
 /* eslint-disable storybook/no-renderer-packages */
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { RecordLootDialog } from '../record-loot-dialog'
 import { useState } from 'react'
 import { Button } from '~/components/ui/button'

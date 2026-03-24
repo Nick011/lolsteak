@@ -43,8 +43,22 @@ export default function GuidesPage() {
         </div>
       )}
 
-      {/* Guide List */}
-      {!isLoading && <GuideList guides={guides} />}
+{/* Guide List */}
+ {!isLoading && (
+ <GuideList
+ guides={guides.map(g => ({
+ ...g,
+ isPublished: g.isPublished,
+ author: g.author
+ ? {
+ id: g.author.id,
+ name: g.author.user?.name ?? null,
+ email: g.author.user?.email ?? 'Unknown',
+ }
+ : null,
+ }))}
+ />
+ )}
     </div>
   )
 }

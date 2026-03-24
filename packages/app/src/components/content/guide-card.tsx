@@ -7,16 +7,16 @@ import { Card, CardContent, CardHeader } from '~/components/ui/card'
 import { Badge } from '~/components/ui/badge'
 
 interface GuideCardProps {
-  id: string
-  title: string
-  slug: string
-  excerpt: string | null
-  category: string
-  tags: string[]
-  authorName: string
-  createdAt: Date
-  updatedAt: Date
-  viewCount: number
+ id: string
+ title: string
+ slug: string
+ excerpt: string | null
+ category: string
+ tags: string[] | null
+ authorName: string
+ createdAt: Date
+ updatedAt: Date
+ viewCount: number
 }
 
 const categoryColors: Record<string, string> = {
@@ -93,20 +93,20 @@ export function GuideCard({
             </div>
           </div>
 
-          {tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {tags.slice(0, 3).map(tag => (
-                <Badge key={tag} variant="outline" size="sm">
-                  {tag}
-                </Badge>
-              ))}
-              {tags.length > 3 && (
-                <Badge variant="outline" size="sm">
-                  +{tags.length - 3}
-                </Badge>
-              )}
-            </div>
-          )}
+{tags && tags.length > 0 && (
+ <div className="flex flex-wrap gap-1.5">
+ {tags.slice(0, 3).map(tag => (
+ <Badge key={tag} variant="outline" size="sm">
+ {tag}
+ </Badge>
+ ))}
+ {tags.length > 3 && (
+ <Badge variant="outline" size="sm">
+ +{tags.length - 3}
+ </Badge>
+ )}
+ </div>
+ )}
         </CardContent>
       </Card>
     </Link>

@@ -21,18 +21,10 @@ import { Badge } from '~/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 
 interface GuideEditorProps {
-  initialData?: {
-    title: string
-    slug: string
-    excerpt: string
-    content: string
-    category: string
-    tags: string[]
-    published: boolean
-  }
-  onSave: (data: GuideFormData) => void
-  onCancel: () => void
-  isSaving?: boolean
+ initialData?: GuideFormData
+ onSave: (data: GuideFormData) => void
+ onCancel: () => void
+ isSaving?: boolean
 }
 
 export type GuideCategory = 'raid_strats' | 'class_guides' | 'pvp' | 'professions' | 'general'
@@ -194,12 +186,12 @@ export function GuideEditor({
             {/* Category */}
             <div className="space-y-2">
               <Label htmlFor="category">Category *</Label>
-              <Select
-                value={formData.category}
-                onValueChange={value =>
-                  setFormData(prev => ({ ...prev, category: value }))
-                }
-              >
+ <Select
+ value={formData.category}
+ onValueChange={(value: GuideCategory) =>
+ setFormData(prev => ({ ...prev, category: value }))
+ }
+ >
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>

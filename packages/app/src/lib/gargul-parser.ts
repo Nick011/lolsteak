@@ -279,9 +279,9 @@ function parseJSON(data: string): ParsedLootItem[] {
     // Handle single item
     const normalized = normalizeItem(parsed as RawGargulItem)
     return normalized ? [normalized] : []
-  } catch (error) {
-    throw new Error('Invalid JSON format')
-  }
+ } catch (_error) {
+ throw new Error('Invalid JSON format')
+ }
 }
 
 /**

@@ -9,22 +9,22 @@ import { Card } from '~/components/ui/card'
 import { GuideCard } from './guide-card'
 
 interface Guide {
-  id: string
-  title: string
-  slug: string
-  excerpt: string | null
-  content: string
-  category: string
-  tags: string[]
-  published: boolean
-  viewCount: number
-  createdAt: Date
-  updatedAt: Date
-  author: {
-    id: string
-    name: string | null
-    email: string
-  }
+ id: string
+ title: string
+ slug: string
+ excerpt: string | null
+ content: string
+ category: string
+ tags: string[] | null
+ isPublished: boolean
+ viewCount: number
+ createdAt: Date
+ updatedAt: Date
+ author: {
+ id: string
+ name: string | null
+ email: string
+ } | null
 }
 
 interface GuideListProps {
@@ -44,18 +44,18 @@ export function GuideList({ guides }: GuideListProps) {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
 
-  const filteredGuides = guides.filter(guide => {
-    const matchesCategory =
-      selectedCategory === 'all' || guide.category === selectedCategory
-    const matchesSearch =
-      searchQuery === '' ||
-      guide.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      guide.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      guide.tags.some(tag =>
-        tag.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    return matchesCategory && matchesSearch
-  })
+const filteredGuides = guides.filter(guide => {
+ const matchesCategory =
+ selectedCategory === 'all' || guide.category === selectedCategory
+ const matchesSearch =
+ searchQuery === '' ||
+ guide.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+ guide.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+ (guide.tags ?? []).some(tag =>
+ tag.toLowerCase().includes(searchQuery.toLowerCase())
+ )
+ return matchesCategory && matchesSearch
+ })
 
   return (
     <div className="space-y-6">
@@ -140,18 +140,18 @@ export function GuideList({ guides }: GuideListProps) {
                 }}
                 exit={{ opacity: 0, scale: 0.9 }}
               >
-                <GuideCard
-                  id={guide.id}
-                  title={guide.title}
-                  slug={guide.slug}
-                  excerpt={guide.excerpt}
-                  category={guide.category}
-                  tags={guide.tags}
-                  authorName={guide.author.name || guide.author.email}
-                  createdAt={guide.createdAt}
-                  updatedAt={guide.updatedAt}
-                  viewCount={guide.viewCount}
-                />
+ <GuideCard
+ id={guide.id}
+ title={guide.title}
+ slug={guide.slug}
+ excerpt={guide.excerpt}
+ category={guide.category}
+ tags={guide.tags}
+ authorName={guide.author?.name || guide.author?.email || 'Unknown'}
+ createdAt={guide.createdAt}
+ updatedAt={guide.updatedAt}
+ viewCount={guide.viewCount}
+ />
               </motion.div>
             ))}
           </AnimatePresence>

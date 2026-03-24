@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -83,11 +82,10 @@ interface CreateEventDialogProps {
 }
 
 export function CreateEventDialog({
-  open,
-  onOpenChange,
+ open,
+ onOpenChange,
 }: CreateEventDialogProps) {
-  const router = useRouter()
-  const { toast } = useToast()
+ const { toast } = useToast()
   const [showRoleRequirements, setShowRoleRequirements] = useState(false)
   const [showSoftReserveSettings, setShowSoftReserveSettings] = useState(false)
 
