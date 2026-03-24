@@ -12,12 +12,16 @@ export default function FaqPage() {
 
   const { data: categories, isLoading } = trpc.content.faqCategories.useQuery()
 
-  // Transform data to include items in each category
-  const categoriesWithItems =
-    categories?.map(category => ({
-      ...category,
-      items: category.items || [],
-    })) || []
+ // Transform data to include items in each category and map sortOrder to order
+ const categoriesWithItems =
+ categories?.map(category => ({
+ ...category,
+ order: category.sortOrder,
+ items: category.items?.map(item => ({
+ ...item,
+ order: item.sortOrder,
+ })) || [],
+ })) || []
 
   return (
     <div className="p-6 space-y-6 max-w-5xl mx-auto">

@@ -97,25 +97,25 @@ export default function GuideDetailPage({ params }: GuideDetailPageProps) {
       {/* Content or Editor */}
       {isEditing ? (
         <GuideEditor
-          initialData={{
-            title: guide.title,
-            slug: guide.slug,
-            excerpt: guide.excerpt || '',
-            content: guide.content,
-            category: guide.category,
-            tags: guide.tags,
-            published: guide.published,
-          }}
+ initialData={{
+ title: guide.title,
+ slug: guide.slug,
+ excerpt: guide.excerpt || '',
+ content: guide.content,
+ category: guide.category,
+ tags: guide.tags || [],
+ published: guide.isPublished,
+ }}
           onSave={handleSave}
           onCancel={handleCancel}
           isSaving={updateGuideMutation.isPending}
         />
       ) : (
-        <GuideContent
-          title={guide.title}
-          category={guide.category}
-          tags={guide.tags}
-          content={guide.content}
+ <GuideContent
+ title={guide.title}
+ category={guide.category}
+ tags={guide.tags || []}
+ content={guide.content}
           authorName={guide.author.name || guide.author.email}
           createdAt={guide.createdAt}
           updatedAt={guide.updatedAt}

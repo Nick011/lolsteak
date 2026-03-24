@@ -35,14 +35,16 @@ interface GuideEditorProps {
   isSaving?: boolean
 }
 
+export type GuideCategory = 'raid_strats' | 'class_guides' | 'pvp' | 'professions' | 'general'
+
 export interface GuideFormData {
-  title: string
-  slug: string
-  excerpt: string
-  content: string
-  category: string
-  tags: string[]
-  published: boolean
+ title: string
+ slug: string
+ excerpt: string
+ content: string
+ category: GuideCategory
+ tags: string[]
+ published: boolean
 }
 
 const categories = [
